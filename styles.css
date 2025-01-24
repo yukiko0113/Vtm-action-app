@@ -47,7 +47,7 @@ h1 {
   left: 2%;
   margin: 1% 0;
   line-height: 1em;
-  z-index: 2;
+  z-index: 0;
 }
 
 button {
@@ -94,27 +94,42 @@ button:active i {
 }
 
 .tooltip {
-  position: absolute;
-  bottom: 150px; /* Positionner la tooltip au-dessus du bouton */
-  left: 50%;
-  transform: translateX(-50%);
-  background: #0000;
-  display: none; /* Masquer par défaut */
-  pointer-events: auto; /* Rendre interactif */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  display: none;
+  pointer-events: auto;
   z-index: 1000;
 }
 
 .tooltip-content {
-  position: relative;
-  z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 10px;
+  height: 100%;
+  width: 100%; /* Assurez que le contenu occupe toute la largeur */
 }
 
-.tooltip-content p {
-  margin: 0 0 10px;
+.tooltip-video-container {
+  max-width: 100%; 
+  object-fit: none;
+}
+.tooltip-text {
+  flex: 1;
+  padding: 20px;
+  color: #fff;
+  text-align: left;
 }
 
-.tooltip-content button {
-  margin-right: 5px;
+.tooltip-text h2 {
+  margin: 0 0 5px 0; /* Espacement de 5px en dessous du titre */
+}
+
+.tooltip-text p {
+  margin: 0 0 5px 0; /* Espacement de 5px en dessous du texte */
 }
 
 video {

@@ -1,44 +1,79 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const tooltipTrigger = document.getElementById('tooltip-trigger');
-    const tooltipContainer = document.getElementById('tooltip-container');
-  
-    // Fonction pour charger le contenu des tooltips
-    function loadTooltipContent() {
-      fetch('Contenu-tooltips.html')
-        .then(response => response.text())
-        .then(data => {
-          tooltipContainer.innerHTML = data;
-          const video = document.getElementById('tooltip-video');
-          if (video) {
-            video.loop = true;
-            video.addEventListener('timeupdate', function() {
-              if (video.currentTime >= video.duration - 20) {
-                video.currentTime = video.duration - 20;
-              }
+  const tooltipTrigger = document.getElementById('tooltip-trigger');
+  const tooltipContainer = document.getElementById('portrait');
+
+  if (!tooltipTrigger || !tooltipContainer) {
+    console.error('Erreur : élément tooltip-trigger ou portrait non trouvé.');
+    return;
+  }
+
+  // Fonction pour charger le contenu des tooltips
+  function loadTooltipContent() {
+    fetch('Contenu-tooltips.html')
+      .then(response => response.text())
+      .then(data => {
+        tooltipContainer.innerHTML = data;
+        const tooltipVideo = document.getElementById('tooltip-video');
+        const resetButton = document.getElementById('reset-tooltip');
+        
+        if (tooltipVideo) {
+          tooltipVideo.currentTime = 0;
+          tooltipVideo.play();
+
+          let firstPlay = true;
+
+          tooltipVideo.addEventListener('timeupdate', function() {
+            if (firstPlay && tooltipVideo.currentTime >= tooltipVideo.duration - 1) {
+              firstPlay = false;
+              tooltipVideo.currentTime = 10;
+              tooltipVideo.loop = true;
+              tooltipVideo.play();
+            } else if (!firstPlay && tooltipVideo.currentTime >= tooltipVideo.duration - 1) {
+              tooltipVideo.currentTime = 10;
+            }
+          });
+
+          // Réinitialiser la tooltip
+          if (resetButton) {
+            resetButton.addEventListener('click', function() {
+              tooltipContainer.style.display = 'none';
+              tooltipVideo.pause();
+              tooltipVideo.currentTime = 0;
+              loadTooltipContent();
+              tooltipContainer.style.display = 'block';
             });
-            video.play();
+          } else {
+            console.error('Erreur : élément reset-tooltip non trouvé.');
           }
-        })
-        .catch(error => console.error('Erreur lors du chargement du contenu des tooltips:', error));
+        } else {
+          console.error('Erreur : élément vidéo non trouvé.');
+        }
+      })
+      .catch(error => console.error('Erreur lors du chargement du contenu des tooltips:', error));
+  }
+
+  // Toggle tooltip visibility on click
+  tooltipTrigger.addEventListener('click', function(event) {
+    if (tooltipContainer.style.display === 'block') {
+      tooltipContainer.style.display = 'none';
+      const tooltipVideo = document.getElementById('tooltip-video');
+      if (tooltipVideo) {
+        tooltipVideo.pause();
+      }
+    } else {
+      tooltipContainer.style.display = 'block';
+      loadTooltipContent();
     }
-  
-    // Toggle tooltip visibility on click
-    tooltipTrigger.addEventListener('click', function(event) {
-      if (tooltipContainer.style.display === 'block') {
-        tooltipContainer.style.display = 'none';
-      } else {
-        loadTooltipContent(); // Charger le contenu de la tooltip
-        tooltipContainer.style.display = 'block';
-        const rect = tooltipTrigger.getBoundingClientRect();
-        tooltipContainer.style.top = `${rect.top + window.scrollY - tooltipContainer.offsetHeight - 10}px`; // Positionner au-dessus du bouton
-        tooltipContainer.style.left = `${rect.left + window.scrollX + rect.width / 2 - tooltipContainer.offsetWidth / 2}px`; // Centrer horizontalement
-      }
-    });
-  
-    // Fermer la tooltip si on clique en dehors
-    document.addEventListener('click', function(event) {
-      if (!tooltipTrigger.contains(event.target) && !tooltipContainer.contains(event.target)) {
-        tooltipContainer.style.display = 'none';
-      }
-    });
   });
+
+  // Fermer la tooltip si on clique en dehors
+  document.addEventListener('click', function(event) {
+    if (!tooltipTrigger.contains(event.target) && !tooltipContainer.contains(event.target)) {
+      tooltipContainer.style.display = 'none';
+      const tooltipVideo = document.getElementById('tooltip-video');
+      if (tooltipVideo) {
+        tooltipVideo.pause();
+      }
+    }
+  });
+});
