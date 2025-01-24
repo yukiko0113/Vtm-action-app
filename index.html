@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
-    <script type="module" src="script.js"></script>
   </head>
   <body class="contenaire">
     <div class="hero-image"></div>
@@ -12,10 +11,13 @@
       <main>
         <h1>VICTIME</h1>
 
-        <button>
-          <i>▲</i>
+        <button id="tooltip-trigger">
+          <i id="portrait-icon">▲</i>
         </button>
+        <!-- Conteneur pour la tooltip -->
+        <div id="tooltip-container" class="tooltip"></div>
       </main>
     </div>
+    <script type="module" src="script.js"></script>
   </body>
 </html>
