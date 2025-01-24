@@ -1,26 +1,25 @@
-.contenaire {
-  display: flex;
-  flex-wrap: wrap;
-  max-width: 960px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-.hero-image {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center;
-}
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
   color: black;
+  display: flex;
+  justify-content: center; /* Centrer horizontalement */
+  align-items: center; /* Centrer verticalement */
+  height: 100vh; /* Hauteur de la fenêtre */
+}
+
+.hero-image {
+  background-image: linear-gradient(
+    rgba(0, 0, 0, 0.5),
+    rgba(0, 0, 0, 0.5)),
+    url("image/background/Victime.gif");
+  background-color: rgba(35, 35, 35, 1); /* Couleur de fond */
+  position: relative;
+  width: 100%;
+  height: 100%; /* S'assurer que l'image recouvre toute la hauteur */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 main {
@@ -30,7 +29,7 @@ main {
 h1 {
   font-weight: bold;
   font-size: 20rem;
-  color:aliceblue;
+  color: aliceblue;
   word-break: break-all;
   position: fixed;
   top: 1%;
@@ -39,44 +38,32 @@ h1 {
   line-height: 1em;
   z-index: 2;
 }
+
 @media (max-width: 600px) {
-  .hero {
-    background-color: rgba(35, 35, 35, 1);
-  }
-
   .hero-image {
-    max-width:100%;
-    max-height: 80vh;
-    position:absolute;
-    left: 0;
-    top: 0;
-    object-fit: cover;
-    mask-image: linear-gradient(
-      to top,
-      #0000,
-      #000
-    ),
-    linear-gradient(
-    to bottom,
-    #0000,
-    #000
-    );
-    
-  
-
+    background-image: 
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), 
+      linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)),
+      url("image/background/Victime.gif");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: rgba(35, 35, 35, 1); /* Couleur de fond */
+    max-width: 814px; /* Largeur maximale */
+    max-height: 458px; /* Hauteur maximale */
   }
-  h1 {
-      font-size: 9.5rem;
-      line-height: 1em;
 
+  h1 {
+    font-size: 9.5rem;
+    line-height: 1em;
   }
 
   p {
-      padding: 0 10px;
+    padding: 0 10px;
   }
 
   button {
-      width: 100%;
-      font-size: 1.2rem;
+    width: 100%;
+    font-size: 1.2rem;
   }
 }
