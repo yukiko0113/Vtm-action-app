@@ -17,10 +17,10 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-    -webkit-mask-image: linear-gradient(to bottom,  transparent 5%, black 60%),
-      linear-gradient(to top,  transparent 5%, black 60%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 5%, black 60%),
+                      linear-gradient(to top, transparent 5%, black 60%);
   mask-image: linear-gradient(to bottom, transparent 5%, black 60%),
-    linear-gradient(to top,  transparent 5%, black 60%);
+              linear-gradient(to top, transparent 5%, black 60%);
   mask-composite: intersect;
   -webkit-mask-composite: source-in;
 }
@@ -48,7 +48,7 @@ button {
   position: absolute;
   left: 50%;
   bottom: 50px; /* Positionner le bouton en bas */
-  transform: translateX(-45%) scale(1);
+  transform: translateX(-50%) scale(1);
   border-style: none;
   outline: none;
   cursor: pointer;
@@ -74,7 +74,8 @@ button:active {
 button i {
   font-size: 40px;
   background: linear-gradient(-45deg, gray 0%, lightgray 100%);
-  -webkit-background-clip: text;
+  background-clip: text; /* Ajoutez la propriété standard */
+  -webkit-background-clip: text; /* Propriété spécifique à WebKit */
   -webkit-text-fill-color: transparent;
   transition: all 0.3s;
 }
@@ -83,6 +84,38 @@ button:active i {
   transform: scale(0.9);
   transition: all 0.3s;
 }
+
+.tooltip {
+  position: absolute;
+  bottom: 150px; /* Positionner la tooltip au-dessus du bouton */
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+  display: none; /* Masquer par défaut */
+  pointer-events: auto; /* Rendre interactif */
+  padding: 10px;
+  z-index: 1000;
+}
+
+.tooltip-content {
+  position: relative;
+  z-index: 1;
+}
+
+.tooltip-content p {
+  margin: 0 0 10px;
+}
+
+.tooltip-content button {
+  margin-right: 5px;
+}
+
+video {
+  max-width: 100%;
+  height: auto;
+}
+
 @media (max-width: 600px) {
   .hero-image {
     background-image: url("image/background/Victime.gif");
@@ -91,11 +124,10 @@ button:active i {
     background-size: cover;
     max-width: 814px; /* Largeur maximale */
     max-height: 458px; /* Hauteur maximale */
-    -webkit-mask-image: linear-gradient(to bottom,  transparent 5%, black 60%),
-      linear-gradient(to top,  transparent 5%, black 60%);
-  mask-image: linear-gradient(to bottom, transparent 5%, black 60%),
-    linear-gradient(to top,  transparent 5%, black 60%);
-
+    -webkit-mask-image: linear-gradient(to bottom, transparent 5%, black 60%),
+                        linear-gradient(to top, transparent 5%, black 60%);
+    mask-image: linear-gradient(to bottom, transparent 5%, black 60%),
+                linear-gradient(to top, transparent 5%, black 60%);
     mask-composite: intersect;
     -webkit-mask-composite: source-in;
   }
@@ -109,7 +141,6 @@ button:active i {
     padding: 0;
   }
 
-  }
   button {
     width: 70px; /* Taille réduite pour les petits écrans */
     height: 70px; /* Taille réduite pour les petits écrans */
@@ -128,3 +159,4 @@ button:active i {
   button i {
     font-size: 30px; /* Taille de l'icône réduite */
   }
+}

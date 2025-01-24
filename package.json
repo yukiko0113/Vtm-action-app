@@ -3,6 +3,7 @@
     "start": "servor --reload"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.6.13",
     "servor": "^4.0.2"
   }
 }
