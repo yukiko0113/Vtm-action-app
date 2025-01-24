@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
           if (video) {
             video.loop = true;
             video.addEventListener('timeupdate', function() {
-              if (video.currentTime >= video.duration - 25) {
-                video.currentTime = video.duration - 25;
+              if (video.currentTime >= video.duration - 20) {
+                video.currentTime = video.duration - 20;
               }
             });
             video.play();

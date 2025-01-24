@@ -8,19 +8,27 @@ body {
   height: 100vh; /* Hauteur de la fenêtre */
   background-color: rgba(35, 35, 35, 1); /* Couleur de fond */
 }
-
 .hero-image {
-  background-image: url("image/background/Victime.gif");
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 100%; /* S'assurer que l'image recouvre toute la hauteur */
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 5%, black 60%),
-                      linear-gradient(to top, transparent 5%, black 60%);
-  mask-image: linear-gradient(to bottom, transparent 5%, black 60%),
-              linear-gradient(to top, transparent 5%, black 60%);
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.hero-image video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 5%, black 60%), linear-gradient(to top, transparent 5%, black 60%);
+  mask-image: linear-gradient(to bottom, transparent 5%, black 60%), linear-gradient(to top, transparent 5%, black 60%);
   mask-composite: intersect;
   -webkit-mask-composite: source-in;
 }
@@ -90,17 +98,15 @@ button:active i {
   bottom: 150px; /* Positionner la tooltip au-dessus du bouton */
   left: 50%;
   transform: translateX(-50%);
-  border-radius: 4px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+  background: #0000;
   display: none; /* Masquer par défaut */
   pointer-events: auto; /* Rendre interactif */
-  padding: 10px;
   z-index: 1000;
 }
 
 .tooltip-content {
   position: relative;
-  z-index: 1;
+  z-index: 1000;
 }
 
 .tooltip-content p {
@@ -117,11 +123,11 @@ video {
 }
 
 @media (max-width: 600px) {
-  .hero-image {
-    background-image: url("image/background/Victime.gif");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+  .hero-image video {
+    width: 814px;
+    height: auto; /* Ajuster la hauteur automatiquement */
+    top: 50%;
+    left: 50%;
     max-width: 814px; /* Largeur maximale */
     max-height: 458px; /* Hauteur maximale */
     -webkit-mask-image: linear-gradient(to bottom, transparent 5%, black 60%),
