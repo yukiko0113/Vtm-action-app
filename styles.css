@@ -8,23 +8,10 @@
   padding-right: 1rem;
 }
 
-.hero {
+.hero-image {
   position: relative;
   width: 100%;
   height: 100vh;
-  background-image: url(image/background/Victime.gif);
-  -webkit-mask-image: linear-gradient(180deg, 
-    black 60%, 
-    transparent 60%, 
-    black 80%, 
-    transparent 100%
-  );
-  mask-image: linear-gradient(180deg, 
-    black 60%, 
-    transparent 60%, 
-    black 80%, 
-    transparent 100%
-  );
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -50,11 +37,32 @@ h1 {
   left: 2%;
   margin: 1% 0;
   line-height: 1em;
+  z-index: 2;
 }
 @media (max-width: 600px) {
   .hero {
-    background-size: 814px 458px;
     background-color: rgba(35, 35, 35, 1);
+  }
+
+  .hero-image {
+    max-width:100%;
+    max-height: 80vh;
+    position:absolute;
+    left: 0;
+    top: 0;
+    object-fit: cover;
+    mask-image: linear-gradient(
+      to top,
+      #0000,
+      #000
+    ),
+    linear-gradient(
+    to bottom,
+    #0000,
+    #000
+    );
+    
+  
 
   }
   h1 {
