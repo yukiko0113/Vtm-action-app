@@ -14,9 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(data => {
         tooltipContainer.innerHTML = data;
         const tooltipVideo = document.getElementById('tooltip-video');
-        const resetButton = document.getElementById('reset-tooltip');
         
         if (tooltipVideo) {
+          // Configurer la vidéo pour qu'elle démarre à 0
           tooltipVideo.currentTime = 0;
           tooltipVideo.play();
 
@@ -32,19 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
               tooltipVideo.currentTime = 10;
             }
           });
-
-          // Réinitialiser la tooltip
-          if (resetButton) {
-            resetButton.addEventListener('click', function() {
-              tooltipContainer.style.display = 'none';
-              tooltipVideo.pause();
-              tooltipVideo.currentTime = 0;
-              loadTooltipContent();
-              tooltipContainer.style.display = 'block';
-            });
-          } else {
-            console.error('Erreur : élément reset-tooltip non trouvé.');
-          }
         } else {
           console.error('Erreur : élément vidéo non trouvé.');
         }
