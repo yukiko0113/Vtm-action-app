@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="script.js"></script>
+  </head>
+<body class="contenaire">
+  <div class="hero-image">
+    <video id="background-video" autoplay muted loop>
+      <source src="image/background/Hunt.webm" type="video/webm">
+    </video>
+  </div>
+  <div class="hero-content">
+    <main>
+      <h1>THE HUNT</h1>
+    </main>
+  </div>
+</body>
+</html>
