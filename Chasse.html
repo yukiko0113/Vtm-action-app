@@ -14,14 +14,15 @@
   <div class="content-container">
     <div class="hero-image" aria-hidden="true">
       <video id="background-video" 
-             autoplay 
-             muted 
-             loop 
-             playsinline
-             aria-label="Background video animation">
-        <source src="image/background/Hunt.webm" type="video/webm">
-        <img src="fallback.jpg" alt="Background fallback" loading="eager">
-      </video>
+      autoplay 
+      muted 
+      loop 
+      playsinline
+      aria-label="Background video animation">
+ <source src="image/background/Hunt.webm" type="video/webm" media="(min-width: 769px)">
+ <source src="image/background/hunt_1.webm" type="video/webm" media="(max-width: 768px)">
+ <img src="fallback.jpg" alt="Background fallback" loading="eager">
+</video>
     </div>
 
     <main class="hero-content">
@@ -42,7 +43,7 @@
            aria-labelledby="tooltip-title"
            aria-hidden="true">
       <div class="tooltip-inner">
-        <!-- Contenu dynamique -->
+      
       </div>
     </aside>
   </div>

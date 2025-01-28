@@ -1,39 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#232323">
+  <title>The Hunt</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css">
   <script type="module" src="script.js"></script>
-  <link rel="icon" href="data:,">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>">
 </head>
-<body class="container">
-  <!-- Conteneur principal -->
+<body>
   <div class="content-container">
-    <!-- Vidéo de fond -->
-    <div class="hero-image">
-      <video autoplay muted loop playsinline>
-        <source src="image/background/Coterie.webm" type="video/webm">
-      </video>
+    <div class="hero-image" aria-hidden="true">
+      <video id="background-video" 
+      autoplay 
+      muted 
+      loop 
+      playsinline
+      aria-label="Background video animation">
+ <source src="image/background/Coterie.webm" type="video/webm" media="(min-width: 769px)">
+ <source src="image/background/Coterie_1.webm" type="video/webm" media="(max-width: 768px)">
+ <img src="fallback.jpg" alt="Background fallback" loading="eager">
+</video>
     </div>
 
-    <!-- Contenu principal -->
-    <div class="hero-content">
-      <main>
-        <h1>COTERIE</h1>
-      </main>
-    </div>
+    <main class="hero-content">
+      <h1 aria-label="coterie">COTERIE</h1>
+    </main>
 
-    <!-- Tooltip system -->
-    <button id="tooltip-trigger" aria-label="Open information" aria-expanded="false">
-      <span class="tooltip-icon"></span>
+    <button id="tooltip-trigger" 
+            class="tooltip-button"
+            aria-label="Information panel trigger"
+            aria-expanded="false"
+            aria-controls="hunt-tooltip">
+      <i class="fas fa-info-circle tooltip-icon" aria-hidden="true"></i>
     </button>
     
-    <!-- Container for tooltip content -->
-    <div id="coterie-tooltip" class="tooltip-content" style="display: none">
-      <!-- Le contenu sera chargé dynamiquement par script.js -->
-    </div>
+    <aside id="hunt-tooltip" 
+           class="tooltip-content"
+           role="dialog"
+           aria-labelledby="tooltip-title"
+           aria-hidden="true">
+      <div class="tooltip-inner">
+      
+      </div>
+    </aside>
   </div>
 </body>
 </html>
