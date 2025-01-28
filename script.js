@@ -1,28 +1,33 @@
-const pages = ['Chasse.html', 'Coterie.html', 'Influence.html', 'Memoria.html', 'Enquete.html'];
+import gsap from "./node_modules/gsap/index.js";
+import ScrollTrigger from "./node_modules/gsap/ScrollTrigger.js";
+import ScrollToPlugin from "./node_modules/gsap/ScrollToPlugin.js";
 
-let currentPageIndex = 0;
-let touchStartX = 0; // Define touchStartX
-const swipeThreshold = 50; // Define swipeThreshold
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 document.addEventListener('DOMContentLoaded', function() {
-  const currentPage = window.location.pathname.split('/').pop();
-  currentPageIndex = pages.indexOf(currentPage);
-  if (currentPageIndex === -1) currentPageIndex = 0;
-  localStorage.setItem('currentPage', currentPageIndex);
+  const sections = document.querySelectorAll('.hero-section');
 
-  document.body.addEventListener('touchstart', e => {
-    touchStartX = e.touches[0].clientX;
-  });
-
-  document.body.addEventListener('touchend', e => {
-    const touchEndX = e.changedTouches[0].clientX;
-    const deltaX = touchEndX - touchStartX;
-
-    if (Math.abs(deltaX) > swipeThreshold) {
-      const direction = deltaX > 0 ? 'right' : 'left';
-      navigate(direction);
+  // Horizontal scrolling setup
+  gsap.to(sections, {
+    xPercent: -100 * (sections.length - 1),
+    ease: "none",
+    scrollTrigger: {
+      trigger: ".container",
+      pin: true,
+      scrub: 1,
+      snap: 1 / (sections.length - 1),
+      end: () => "+=" + document.querySelector(".container").offsetWidth
     }
   });
+
+  // Scroll to the section "Chasse" on page load
+  const currentPage = localStorage.getItem('currentPage');
+  if (currentPage) {
+    const targetSection = sections[currentPage];
+    if (targetSection) {
+      gsap.to(window, { scrollTo: { x: targetSection.offsetLeft, autoKill: false }, duration: 1 });
+    }
+  }
 
   const tooltipTrigger = document.getElementById('tooltip-trigger');
   const tooltipContainer = document.querySelector('.tooltip-content');
@@ -77,62 +82,3 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-
-function navigate(direction) {
-  if (!['left', 'right'].includes(direction)) return;
-  
-  const container = document.querySelector('.content-container');
-  const h1 = document.querySelector('h1');
-  
-  if (!container || !h1) return;
-
-  container.classList.add(`swipe-${direction}`);
-  h1.classList.add(`swipe-${direction}`);
-
-  const cleanup = () => {
-    container.classList.remove(`swipe-${direction}`);
-    h1.classList.remove(`swipe-${direction}`);
-  };
-
-  container.addEventListener('transitionend', () => {
-    cleanup();
-    updatePage(direction === 'left' ? 'next' : 'prev');
-  }, { once: true });
-}
-
-function updatePage(direction) {
-  if (!['next', 'prev'].includes(direction)) return;
-  
-  const newIndex = direction === 'next' 
-    ? Math.min(currentPageIndex + 1, pages.length - 1) 
-    : Math.max(currentPageIndex - 1, 0);
-
-  if (newIndex !== currentPageIndex) {
-    try {
-      localStorage.setItem('currentPage', String(newIndex));
-      localStorage.setItem('transitionDirection', direction);
-      document.documentElement.classList.add('page-transition');
-      window.location.href = pages[newIndex];
-    } catch (error) {
-      console.error('Navigation error:', error);
-    }
-  }
-}
-
-window.onload = () => {
-  const direction = localStorage.getItem('transitionDirection');
-  if (!direction) return;
-
-  const container = document.querySelector('.content-container');
-  if (!container) return;
-
-  container.classList.add(`enter-${direction}`);
-  
-  const cleanup = () => {
-    document.documentElement.classList.remove('page-transition');
-    container.classList.remove(`enter-${direction}`);
-    localStorage.removeItem('transitionDirection');
-  };
-
-  container.addEventListener('animationend', cleanup, { once: true });
-};
