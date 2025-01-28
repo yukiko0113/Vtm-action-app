@@ -1,3 +1,7 @@
+body.swipe-transition {
+  transition: transform 0.3s ease;
+}
+
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
@@ -7,6 +11,8 @@ body {
   align-items: center;
   height: 100vh;
   background-color: rgba(35, 35, 35, 1);
+  transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  overflow-x: hidden;
 }
 
 .hero-image, .hero-image video {
@@ -21,21 +27,6 @@ body {
   overflow: hidden;
   -webkit-mask-image: linear-gradient(to bottom, transparent 5%, black 60%), linear-gradient(to top, transparent 5%, black 60%);
   mask-image: linear-gradient(to bottom, transparent 5%, black 60%), linear-gradient(to top, transparent 5%, black 60%);
-  mask-composite: intersect;
-  -webkit-mask-composite: source-in;
-}
-.hero-image-paysage, .hero-image video {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 150%;
-  height: 150%;
-  object-fit: cover;
-  transform: translate(-50%, -50%);
-  z-index: -1;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(to right, transparent 10%, black 80%), linear-gradient(to left, transparent 10%, black 80%);
-  mask-image: linear-gradient(to right, transparent 10%, black 80%), linear-gradient(to left, transparent 10%, black 80%);
   mask-composite: intersect;
   -webkit-mask-composite: source-in;
 }
@@ -150,12 +141,34 @@ button:active i {
     height: 100%;
     object-fit: cover; /* Assure que la vidéo couvre tout l'arrière-plan */
 }
-  .hero-image video {
-    width: 814px;
-    height: auto;
-    max-width: 814px;
-    max-height: 458px;
-  }
+.hero-image-paysage, 
+.hero-image video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 150%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  overflow: hidden;
+  
+  /* Version optimisée du masque */
+  -webkit-mask-image: linear-gradient(
+    to right, 
+    transparent 0%, 
+    rgba(0,0,0,1) 15%, 
+    rgba(0,0,0,1) 85%, 
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right, 
+    transparent 0%, 
+    rgba(0,0,0,1) 15%, 
+    rgba(0,0,0,1) 85%, 
+    transparent 100%
+  );
+}
   
   h1 {
     font-size: 9.5rem;

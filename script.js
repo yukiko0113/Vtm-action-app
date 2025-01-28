@@ -65,69 +65,46 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-var initialTouchX, initialTouchY,
- finalTouchX, finalTouchY;
-var swipeThreshold = 100; 
-var dynamicStyle = 
-document.createElement("style");
-document.body.
-appendChild(dynamicStyle);
+ // Logique de navigation par swipe
+ const pages = ['Chasse.html', 'Coterie.html', 'Influence.html' , 'Memoria.html' , 'Enquete.html' ];
+ let currentPageIndex = parseInt(localStorage.getItem('currentPage')) || 0;
+ let touchStartX = 0;
+ const swipeThreshold = 50;
 
+ function updatePage(direction) {
+   const newIndex = direction === 'next' 
+     ? Math.min(currentPageIndex + 1, pages.length - 1) 
+     : Math.max(currentPageIndex - 1, 0);
 
-function handleTouch(startX, endX,
-     onSwipeLeft, onSwipeRight) {
-    var horizontalDistance = 
-    finalTouchX - initialTouchX;
-    var verticalDistance = 
-    finalTouchY - initialTouchY;
+   if (newIndex !== currentPageIndex) {
+     currentPageIndex = newIndex;
+     localStorage.setItem('currentPage', currentPageIndex);
+     window.location.href = pages[currentPageIndex];
+   }
+ }
 
-    if (Math.abs(horizontalDistance) >
-     Math.abs(verticalDistance) &&
-      Math.abs(horizontalDistance) >
-       swipeThreshold) {
-        if (finalTouchX - 
-            initialTouchX < 0) {
-            onSwipeLeft(); 
-        } else {
-            onSwipeRight(); 
-        }
-    }
-}
+ // Gestion des événements tactiles
+ document.body.addEventListener('touchstart', e => {
+   touchStartX = e.touches[0].clientX;
+ });
 
+ document.body.addEventListener('touchend', e => {
+   const touchEndX = e.changedTouches[0].clientX;
+   const deltaX = touchEndX - touchStartX;
 
-var swipeLeft = () => {
-    dynamicStyle.innerHTML = 
-    "h3:before{content:'You swiped left!'}";
-    document.querySelector('.container').
-    style.background = '#D8335B';
-};
+   if (Math.abs(deltaX) > swipeThreshold) {
+     deltaX > 0 ? updatePage('prev') : updatePage('next');
+   }
+ });
 
-var swipeRight = () => {
-    dynamicStyle.innerHTML = 
-    "h3:before{content:'You swiped right!'}";
-    document.querySelector('.container').
-    style.background = '#2C82C9';
-};
+ // Feedback visuel pendant le swipe
+ document.body.addEventListener('touchmove', e => {
+   const deltaX = e.touches[0].clientX - touchStartX;
+   if (Math.abs(deltaX) > 30) {
+     document.body.style.transform = `translateX(${deltaX}px)`;
+   }
+ });
 
-
-window.onload = function () {
-    window.addEventListener
-    ('touchstart', function (event) {
-        initialTouchX = 
-        event.touches[0].clientX;
-        initialTouchY =
-         event.touches[0].clientY;
-    });
-
-    window.addEventListener
-    ('touchend', function (event) {
-        finalTouchX = event.
-        changedTouches[0].clientX;
-        finalTouchY = event.
-        changedTouches[0].clientY;
-
-        
-        handleTouch(initialTouchX,
-        finalTouchX, swipeLeft, swipeRight);
-    });
-};
+ document.body.addEventListener('touchend', () => {
+   document.body.style.transform = 'translateX(0)';
+ });

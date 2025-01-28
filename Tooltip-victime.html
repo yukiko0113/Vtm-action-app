@@ -4,14 +4,21 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="styles.css">
     <script type="module" src="script.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, orientation=landscape">
-    <title>Tooltip Victime</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Page 1</title>
 </head>
 <body class="contenaire">
-        <div class="hero-image-paysage">
-            <video id="background-video" autoplay muted loop>
-              <source src="image/background/Victime.webm" type="video/webm">
-            </video>
-          </div>
+    <div class="hero-image-paysage">
+        <video id="background-video" autoplay muted loop>
+          <source src="image/background/Victime.webm" type="video/webm">
+        </video>
+    </div>
+    
+    <!-- Ajouter un indicateur de navigation -->
+    <div class="page-indicator">
+        <span data-page="1" class="active"></span>
+        <span data-page="2"></span>
+        <span data-page="3"></span>
+    </div>
 </body>
 </html>
