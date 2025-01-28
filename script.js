@@ -1,138 +1,225 @@
-const pages = ['Chasse.html', 'Coterie.html', 'Influence.html', 'Memoria.html', 'Enquete.html'];
+(() => {
+  // Configuration
+  const PAGES = ['Chasse.html', 'Coterie.html', 'Influence.html', 'Memoria.html', 'Enquete.html'];
+  const SWIPE_THRESHOLD = 50;
+  const TOOLTIP_VIDEO_LOOP_START = 10;
 
-let currentPageIndex = 0;
-let touchStartX = 0; // Define touchStartX
-const swipeThreshold = 50; // Define swipeThreshold
+  // États de l'application
+  let currentPageIndex = 0;
+  let touchStartX = 0;
+  let isAnimating = false;
+  let tooltipLoaded = false;
 
-document.addEventListener('DOMContentLoaded', function() {
-  const currentPage = window.location.pathname.split('/').pop();
-  currentPageIndex = pages.indexOf(currentPage);
-  if (currentPageIndex === -1) currentPageIndex = 0;
-  localStorage.setItem('currentPage', currentPageIndex);
-
-  document.body.addEventListener('touchstart', e => {
-    touchStartX = e.touches[0].clientX;
-  });
-
-  document.body.addEventListener('touchend', e => {
-    const touchEndX = e.changedTouches[0].clientX;
-    const deltaX = touchEndX - touchStartX;
-
-    if (Math.abs(deltaX) > swipeThreshold) {
-      const direction = deltaX > 0 ? 'right' : 'left';
-      navigate(direction);
-    }
-  });
-
+  // Éléments DOM
+  const body = document.body;
   const tooltipTrigger = document.getElementById('tooltip-trigger');
   const tooltipContainer = document.querySelector('.tooltip-content');
+  const contentContainer = document.querySelector('.content-container');
+  const pageTitle = document.querySelector('h1');
 
-  if (tooltipTrigger && tooltipContainer) {
-    function loadTooltipContent() {
-      fetch('Contenu-tooltips.html')
-        .then(response => response.text())
-        .then(data => {
-          tooltipContainer.innerHTML = data;
-          const tooltipVideo = document.getElementById('tooltip-video');
-          
-          if (tooltipVideo) {
-            tooltipVideo.currentTime = 0;
-            tooltipVideo.play();
+  // Initialisation
+  function init() {
+      const currentPage = window.location.pathname.split('/').pop();
+      currentPageIndex = PAGES.indexOf(currentPage);
+      sessionStorage.setItem('currentPage', currentPageIndex);
 
-            let firstPlay = true;
+      setupEventListeners();
+      prefetchPages();
+      setupAccessibility();
+  }
 
-            tooltipVideo.addEventListener('timeupdate', function() {
-              if (firstPlay && tooltipVideo.currentTime >= tooltipVideo.duration - 1) {
-                firstPlay = false;
-                tooltipVideo.currentTime = 10;
-                tooltipVideo.loop = true;
-                tooltipVideo.play();
-              } else if (!firstPlay && tooltipVideo.currentTime >= tooltipVideo.duration - 1) {
-                tooltipVideo.currentTime = 10;
-              }
-            });
-          }
-        })
-        .catch(error => console.error('Erreur lors du chargement du contenu des tooltips:', error));
-    }
+  // Gestion des événements
+  function setupEventListeners() {
+      body.addEventListener('touchstart', handleTouchStart);
+      body.addEventListener('touchend', handleTouchEnd);
+      
+      if (tooltipTrigger) {
+          tooltipTrigger.addEventListener('click', handleTooltipToggle);
+          document.addEventListener('click', handleOutsideTooltipClick);
+      }
+  }
 
-    tooltipTrigger.addEventListener('click', function(event) {
-      event.stopPropagation();
+  // Logique de navigation
+  function handleTouchStart(e) {
+      touchStartX = e.touches[0].clientX;
+  }
+
+  function handleTouchEnd(e) {
+      if (isAnimating) return;
+
+      const touchEndX = e.changedTouches[0].clientX;
+      const deltaX = touchEndX - touchStartX;
+
+      if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
+          navigate(deltaX > 0 ? 'right' : 'left');
+      }
+  }
+
+  function navigate(direction) {
+      isAnimating = true;
+      const animationClass = `swipe-${direction}`;
+
+      contentContainer.classList.add(animationClass);
+      pageTitle.classList.add(animationClass);
+
+      const cleanup = () => {
+          contentContainer.classList.remove(animationClass);
+          pageTitle.classList.remove(animationClass);
+          isAnimating = false;
+      };
+
+      contentContainer.addEventListener('animationend', () => {
+          cleanup();
+          updatePage(direction === 'left' ? 'next' : 'prev');
+      }, { once: true });
+  }
+
+  function updatePage(direction) {
+      const newIndex = direction === 'next' ? 
+          Math.min(currentPageIndex + 1, PAGES.length - 1) : 
+          Math.max(currentPageIndex - 1, 0);
+
+      if (newIndex === currentPageIndex) return;
+
+      try {
+          sessionStorage.setItem('currentPage', newIndex);
+          sessionStorage.setItem('transitionDirection', direction);
+          document.documentElement.classList.add('page-transition');
+          window.location.href = PAGES[newIndex];
+      } catch (error) {
+          console.error('Navigation error:', error);
+          document.body.classList.add('error-transition');
+      }
+  }
+
+  // Gestion des tooltips
+  function handleTooltipToggle(e) {
+      e.stopPropagation();
+      
       if (tooltipContainer.style.display === 'block') {
-        tooltipContainer.style.display = 'none';
-        const tooltipVideo = document.getElementById('tooltip-video');
-        if (tooltipVideo) tooltipVideo.pause();
+          hideTooltip();
       } else {
-        tooltipContainer.style.display = 'block';
-        loadTooltipContent();
+          showTooltip();
       }
-    });
-
-    document.addEventListener('click', function(event) {
-      if (!tooltipTrigger.contains(event.target) && !tooltipContainer.contains(event.target)) {
-        tooltipContainer.style.display = 'none';
-        const tooltipVideo = document.getElementById('tooltip-video');
-        if (tooltipVideo) tooltipVideo.pause();
-      }
-    });
   }
-});
 
-function navigate(direction) {
-  if (!['left', 'right'].includes(direction)) return;
-  
-  const container = document.querySelector('.content-container');
-  const h1 = document.querySelector('h1');
-  
-  if (!container || !h1) return;
+  function showTooltip() {
+      tooltipContainer.style.display = 'block';
+      tooltipTrigger.setAttribute('aria-expanded', 'true');
+      
+      if (!tooltipLoaded) {
+          loadTooltipContent();
+      } else {
+          restartTooltipVideo();
+      }
+  }
 
-  container.classList.add(`swipe-${direction}`);
-  h1.classList.add(`swipe-${direction}`);
+  function hideTooltip() {
+      tooltipContainer.style.display = 'none';
+      tooltipTrigger.setAttribute('aria-expanded', 'false');
+      pauseTooltipVideo();
+  }
 
-  const cleanup = () => {
-    container.classList.remove(`swipe-${direction}`);
-    h1.classList.remove(`swipe-${direction}`);
+  async function loadTooltipContent() {
+      try {
+          const response = await fetch('Contenu-tooltips.html');
+          if (!response.ok) throw new Error(`HTTP error! ${response.status}`);
+          
+          tooltipContainer.innerHTML = await response.text();
+          tooltipLoaded = true;
+          setupTooltipVideo();
+      } catch (error) {
+          console.error('Tooltip loading failed:', error);
+          tooltipContainer.innerHTML = '<p>Content unavailable</p>';
+      }
+  }
+
+  // Contrôle vidéo
+  function setupTooltipVideo() {
+      const tooltipVideo = document.getElementById('tooltip-video');
+      if (!tooltipVideo) return;
+
+      tooltipVideo.currentTime = 0;
+      tooltipVideo.play();
+
+      tooltipVideo.addEventListener('timeupdate', handleVideoTimeUpdate);
+      tooltipVideo.addEventListener('error', handleVideoError);
+  }
+
+  function handleVideoTimeUpdate() {
+      const video = this;
+      if (video.currentTime >= video.duration - 1) {
+          video.currentTime = TOOLTIP_VIDEO_LOOP_START;
+          video.play();
+      }
+  }
+
+  function handleVideoError() {
+      console.error('Video playback failed');
+      this.parentElement.innerHTML = '<p>Video unavailable</p>';
+  }
+
+  function restartTooltipVideo() {
+      const tooltipVideo = document.getElementById('tooltip-video');
+      if (tooltipVideo) {
+          tooltipVideo.currentTime = 0;
+          tooltipVideo.play();
+      }
+  }
+
+  function pauseTooltipVideo() {
+      const tooltipVideo = document.getElementById('tooltip-video');
+      if (tooltipVideo) tooltipVideo.pause();
+  }
+
+  // Accessibilité
+  function setupAccessibility() {
+      if (tooltipTrigger) {
+          tooltipTrigger.setAttribute('aria-haspopup', 'dialog');
+          tooltipTrigger.setAttribute('aria-expanded', 'false');
+          tooltipTrigger.addEventListener('keydown', handleTooltipKeyboard);
+      }
+  }
+
+  function handleTooltipKeyboard(e) {
+      if (['Enter', ' '].includes(e.key)) {
+          e.preventDefault();
+          tooltipTrigger.click();
+      }
+  }
+
+  function handleOutsideTooltipClick(e) {
+      if (!tooltipTrigger.contains(e.target) && !tooltipContainer.contains(e.target)) {
+          hideTooltip();
+      }
+  }
+
+  // Optimisations
+  function prefetchPages() {
+      PAGES.forEach(page => {
+          const link = document.createElement('link');
+          link.rel = 'prefetch';
+          link.href = page;
+          document.head.appendChild(link);
+      });
+  }
+
+  // Gestion des transitions
+  window.onload = () => {
+      const direction = sessionStorage.getItem('transitionDirection');
+      if (!direction || !contentContainer) return;
+
+      contentContainer.classList.add(`enter-${direction}`);
+      
+      const cleanup = () => {
+          document.documentElement.classList.remove('page-transition');
+          contentContainer.classList.remove(`enter-${direction}`);
+          sessionStorage.removeItem('transitionDirection');
+      };
+
+      contentContainer.addEventListener('animationend', cleanup, { once: true });
   };
 
-  container.addEventListener('transitionend', () => {
-    cleanup();
-    updatePage(direction === 'left' ? 'next' : 'prev');
-  }, { once: true });
-}
-
-function updatePage(direction) {
-  if (!['next', 'prev'].includes(direction)) return;
-  
-  const newIndex = direction === 'next' 
-    ? Math.min(currentPageIndex + 1, pages.length - 1) 
-    : Math.max(currentPageIndex - 1, 0);
-
-  if (newIndex !== currentPageIndex) {
-    try {
-      localStorage.setItem('currentPage', String(newIndex));
-      localStorage.setItem('transitionDirection', direction);
-      document.documentElement.classList.add('page-transition');
-      window.location.href = pages[newIndex];
-    } catch (error) {
-      console.error('Navigation error:', error);
-    }
-  }
-}
-
-window.onload = () => {
-  const direction = localStorage.getItem('transitionDirection');
-  if (!direction) return;
-
-  const container = document.querySelector('.content-container');
-  if (!container) return;
-
-  container.classList.add(`enter-${direction}`);
-  
-  const cleanup = () => {
-    document.documentElement.classList.remove('page-transition');
-    container.classList.remove(`enter-${direction}`);
-    localStorage.removeItem('transitionDirection');
-  };
-
-  container.addEventListener('animationend', cleanup, { once: true });
-};
+  // Démarrage
+  document.addEventListener('DOMContentLoaded', init);
+})();
