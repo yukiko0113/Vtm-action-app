@@ -79,8 +79,8 @@ body {
   width: auto;
   height: auto;
   object-fit: cover;
+  transition: transform 0.3s ease-out;
 }
-
 
 h1 {
   font-size: 20rem;
@@ -147,10 +147,14 @@ button:active {
 /* ==================== */
 @media (max-width: 700px) {
   h1 {
-    font-size: 9.2rem;
-    top: 3%;
+    font-size: 6rem; /* Taille réduite pour mobile */
+    top: 5%;
     left: 5%;
+    line-height: 1.2em; /* Ajustement de l'interligne */
+    word-break: normal; /* Évite de casser les mots */
+    white-space: normal; /* Évite les sauts de ligne forcés */
   }
+}
 
   button {
     width: 70px;
@@ -161,56 +165,51 @@ button:active {
     width: 30px;
     height: 30px;
   }
-}
 
 @media (max-width: 700px) and (orientation: portrait) {
   .hero-image {
-    width: 814px; /* Largeur fixe spécifique */
+    width: 100%; /* Largeur relative à l'écran */
     height: auto;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    overflow: visible;
+    overflow: visible; /* Permet à la vidéo de dépasser */
   }
-
   #background-video {
-    width: 100%; /* Prendre 100% du conteneur .hero-image */
-    height: auto;
-    object-fit: cover;
-    object-position: center;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    /* Effet de transition pour le parallaxe */
-    transition: transform 0.3s ease-out; 
+    width: 100%; /* Ajustement spécifique pour mobile */
+    height: 100%; /* Ajustement spécifique pour mobile */
   }
+  .hero-image {
+    border: 2px solid red; /* Bordure pour visualiser le conteneur */
+  }
+  
+  #background-video {
+    border: 2px solid blue; /* Bordure pour visualiser la vidéo */
+  }
+}
 
-  /* Masque dynamique adapté */
-  .hero-image::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      var(--dark-bg) 20%,
-      var(--dark-bg) 80%,
-      transparent 100%
-    );
-    z-index: 1;
-    pointer-events: none; /* Permettre le swipe à travers le masque */
-  }
+.hero-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--dark-bg) 20%,
+    var(--dark-bg) 80%,
+    transparent 100%
+  );
+  z-index: 1;
+  pointer-events: none; /* Permettre le swipe à travers le masque */
+}
 
-  /* Conteneur parent pour le swipe */
-  .hero-container {
-    width: 100vw;
-    height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-  }
+.hero-container {
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden; /* Cache le débordement horizontal */
+  position: relative;
 }
