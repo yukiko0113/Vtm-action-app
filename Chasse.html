@@ -1,21 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="stylesheet" href="styles.css" />
-    <script type="module" src="script.js"></script>
-  </head>
-<body class="contenaire">
-  <div class="hero-image">
-    <video id="background-video" autoplay muted loop>
-      <source src="image/background/Hunt.webm" type="video/webm">
-    </video>
-  </div>
-  <div class="hero-content">
-    <main>
-      <h1>THE<br>HUNT</h1>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#232323">
+  <title>The Hunt</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="script.js"></script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>">
+</head>
+<body>
+  <div class="content-container">
+    <div class="hero-image" aria-hidden="true">
+      <video id="background-video" 
+             autoplay 
+             muted 
+             loop 
+             playsinline
+             aria-label="Background video animation">
+        <source src="image/background/Hunt.webm" type="video/webm">
+        <img src="fallback.jpg" alt="Background fallback" loading="eager">
+      </video>
+    </div>
+
+    <main class="hero-content">
+      <h1 aria-label="THE HUNT">THE<br>HUNT</h1>
     </main>
+
+    <button id="tooltip-trigger" 
+            class="tooltip-button"
+            aria-label="Information panel trigger"
+            aria-expanded="false"
+            aria-controls="hunt-tooltip">
+      <i class="fas fa-info-circle tooltip-icon" aria-hidden="true"></i>
+    </button>
+    
+    <aside id="hunt-tooltip" 
+           class="tooltip-content"
+           role="dialog"
+           aria-labelledby="tooltip-title"
+           aria-hidden="true">
+      <div class="tooltip-inner">
+        <!-- Contenu dynamique -->
+      </div>
+    </aside>
   </div>
 </body>
 </html>
