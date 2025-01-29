@@ -1,14 +1,12 @@
-import gsap from "gsap";
-import { ScrollTrigger, ScrollToPlugin } from "gsap/all";
-import "gsap/ScrollTrigger";
-import "gsap/ScrollToPlugin";
+const gsap = require('gsap');
+const { ScrollTrigger, ScrollToPlugin } = require('gsap/all');
 
 // Register all plugins
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 document.addEventListener('DOMContentLoaded', function() {
-  const sections = document.querySelectorAll('.hero-section');
-  const container = document.querySelector('.container');
+  // Reste de votre code
+});
 
   // Calculate total width for horizontal scrolling
   const totalWidth = container.offsetWidth * (sections.length - 1);
@@ -94,4 +92,3 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
-});
