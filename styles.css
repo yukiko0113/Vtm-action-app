@@ -44,36 +44,27 @@ body {
 }
 
 .hero-section {
-  width: 100vw;
-  height: 100vh;
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  overflow: hidden; /* Cache tout ce qui dépasse */
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .hero-image {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: auto;
-  
-  object-fit: cover;
+  height: 100%;
   overflow: hidden; /* Cache tout ce qui dépasse */
   z-index: -1; /* Vidéo en arrière-plan */
   background:rgba(25, 25, 25, 1)
 }
 
 .hero-image video {
-  max-width: 100%;
-  height: auto;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  
 }
 
 #background-video {
@@ -97,7 +88,7 @@ body {
 }
 
 h1 {
-  font-size: clamp(2rem, 10vw, 12rem); /* Taille adaptative selon la largeur de l'écran */
+  font-size: clamp(15rem, 70vw, 6rem); /* Taille adaptative selon la largeur de l'écran */
   color: var(--text-color);
   position: absolute; /* Position fixe par rapport à l'écran */
   top: 20px; /* Position en haut */
@@ -105,6 +96,8 @@ h1 {
   z-index: 1; /* Titre au-dessus du gradient et de la vidéo */
   margin: 0;
   transform: none; /* Supprime tout décalage */
+  line-height: 0.8; /* Améliore l'espacement vertical */
+  white-space: nowrap; /* Empêche le texte de se casser en plusieurs lignes sur desktop */
 }
 
 /* Tooltip styles */
@@ -128,11 +121,15 @@ h1 {
 /* Responsive styles */
 @media (max-width: 700px) {
   h1 {
-    font-size: clamp(1.5rem, 30vw, 10rem); /* Taille adaptative réduite pour mobile */
-    top: 5px; /* Position en haut */
-    left: 5px; /* Position à gauche */
-    line-height: 1;
-    padding: 5px;  
+    font-size: clamp(7rem, 30vw, 4rem); /* Taille adaptative réduite pour mobile */
+    top: 10px; /* Position en haut */
+    left: 10px; /* Position à gauche */
+    line-height: 0.8; /* Améliore l'espacement vertical */
+    white-space: normal; /* Permet le retour à la ligne */
+    width: 90%; /* Largeur réduite pour le retour à la ligne */
+    word-wrap: break-word; /* Permet le retour à la ligne si nécessaire */
+    overflow-wrap: break-word; /* Compatibilité avec d'autres navigateurs */
+  }
 }
 
   .hero-image video {
@@ -157,7 +154,6 @@ button {
 .tooltip-icon {
   width: 30px;
   height: 30px;
-}
 }
 @media (max-width: 700px) and (orientation: portrait) {
   .hero-image {
