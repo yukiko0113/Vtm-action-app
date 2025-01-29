@@ -1,22 +1,28 @@
-import gsap from "./node_modules/gsap/index.js";
-import ScrollTrigger from "./node_modules/gsap/ScrollTrigger.js";
-import ScrollToPlugin from "./node_modules/gsap/ScrollToPlugin.js";
+import gsap from "gsap";
+import { ScrollTrigger, ScrollToPlugin } from "gsap/all";
+import "gsap/ScrollTrigger";
+import "gsap/ScrollToPlugin";
 
+// Register all plugins
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 document.addEventListener('DOMContentLoaded', function() {
   const sections = document.querySelectorAll('.hero-section');
+  const container = document.querySelector('.container');
+
+  // Calculate total width for horizontal scrolling
+  const totalWidth = container.offsetWidth * (sections.length - 1);
 
   // Horizontal scrolling setup
   gsap.to(sections, {
-    xPercent: -100 * (sections.length - 1),
+    x: -totalWidth,
     ease: "none",
     scrollTrigger: {
       trigger: ".container",
       pin: true,
-      scrub: 1,
+      scrub: true,
       snap: 1 / (sections.length - 1),
-      end: () => "+=" + document.querySelector(".container").offsetWidth
+      end: `+=${totalWidth}`
     }
   });
 
@@ -25,10 +31,17 @@ document.addEventListener('DOMContentLoaded', function() {
   if (currentPage) {
     const targetSection = sections[currentPage];
     if (targetSection) {
-      gsap.to(window, { scrollTo: { x: targetSection.offsetLeft, autoKill: false }, duration: 1 });
+      gsap.to(window, { 
+        scrollTo: { 
+          x: targetSection.offsetLeft, 
+          autoKill: false 
+        }, 
+        duration: 1 
+      });
     }
   }
 
+  // Tooltip functionality
   const tooltipTrigger = document.getElementById('tooltip-trigger');
   const tooltipContainer = document.querySelector('.tooltip-content');
 
