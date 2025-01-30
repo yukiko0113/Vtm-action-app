@@ -1,43 +1,111 @@
-const gsap = require('gsap');
-const { ScrollTrigger, ScrollToPlugin } = require('gsap/all');
+function setupHorizontalScroll() {
+  const container = document.querySelector('.container');
+  if (!container) return;
 
-// Register all plugins
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+  // Configuration
+  const config = {
+    scrollSpeed: 0.5, // Vitesse du défilement
+    snapThreshold: 0.3, // Seuil pour le snap aux sections
+    friction: 0.1 // Frottement pour un arrêt naturel
+  };
 
-document.addEventListener('DOMContentLoaded', function() {
-  // Reste de votre code
-});
+  // État interne
+  let isScrolling = false;
+  let lastScrollPosition = 0;
+  let touchStartX = 0;
 
-  // Calculate total width for horizontal scrolling
-  const totalWidth = container.offsetWidth * (sections.length - 1);
+  // Gestion du wheel event
+  container.addEventListener('wheel', handleWheel);
+  
+  // Gestion du touch pour les mobiles
+  container.addEventListener('touchstart', handleTouchStart);
+  container.addEventListener('touchmove', handleTouchMove);
 
-  // Horizontal scrolling setup
-  gsap.to(sections, {
-    x: -totalWidth,
-    ease: "none",
-    scrollTrigger: {
-      trigger: ".container",
-      pin: true,
-      scrub: true,
-      snap: 1 / (sections.length - 1),
-      end: `+=${totalWidth}`
-    }
-  });
+  // Gestion du scroll natif
+  container.addEventListener('scroll', handleScroll);
 
-  // Scroll to the section "Chasse" on page load
-  const currentPage = localStorage.getItem('currentPage');
-  if (currentPage) {
-    const targetSection = sections[currentPage];
-    if (targetSection) {
-      gsap.to(window, { 
-        scrollTo: { 
-          x: targetSection.offsetLeft, 
-          autoKill: false 
-        }, 
-        duration: 1 
+  // Fonction principale de gestion du wheel
+  function handleWheel(e) {
+    e.preventDefault();
+    
+    // Calcul du delta horizontal
+    const deltaX = e.deltaX;
+    const scrollAmount = deltaX * config.scrollSpeed;
+
+    // Si déjà en train de scroll, on sort
+    if (isScrolling) return;
+
+    // Mise à jour de l'état
+    isScrolling = true;
+    
+    // Animation fluide avec GSAP
+    gsap.to(container, {
+      scrollTo: {
+        x: () => container.scrollLeft + scrollAmount,
+        y: 0
+      },
+      duration: config.snapThreshold,
+      ease: "power2.out",
+      onComplete: () => {
+        isScrolling = false;
+      }
+    });
+  }
+
+  // Gestion du touch pour les mobiles
+  function handleTouchStart(e) {
+    touchStartX = e.touches[0].clientX;
+    lastScrollPosition = container.scrollLeft;
+  }
+
+  function handleTouchMove(e) {
+    e.preventDefault();
+    const currentX = e.touches[0].clientX;
+    const scrollAmount = (lastScrollPosition - (currentX - touchStartX)) * config.scrollSpeed;
+
+    gsap.to(container, {
+      scrollTo: {
+        x: scrollAmount,
+        y: 0
+      },
+      duration: config.snapThreshold,
+      ease: "power2.out",
+      onComplete: () => {
+        lastScrollPosition = container.scrollLeft;
+      }
+    });
+  }
+
+  // Gestion du scroll natif
+  function handleScroll() {
+    // Logique pour le snap aux sections
+    const scrollPosition = container.scrollLeft;
+    const sections = document.querySelectorAll('section');
+    
+    if (sections.length === 0) return;
+
+    const sectionWidth = sections[0].offsetWidth;
+    const snapPosition = Math.round(scrollPosition / sectionWidth) * sectionWidth;
+
+    if (Math.abs(scrollPosition - snapPosition) > sectionWidth * config.snapThreshold) {
+      gsap.to(container, {
+        scrollTo: {
+          x: snapPosition,
+          y: 0
+        },
+        duration: 0.3,
+        ease: "power2.out"
       });
     }
   }
+
+  // Initialisation
+  container.style.overflowX = 'scroll';
+  container.style.touchAction = 'none';
+}
+
+// Initialisation au chargement
+document.addEventListener('DOMContentLoaded', setupHorizontalScroll);
 
   // Tooltip functionality
   const tooltipTrigger = document.getElementById('tooltip-trigger');
