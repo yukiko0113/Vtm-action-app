@@ -5,11 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollToPlugin.min.js"></script>
-      <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>">
-  </head>
+  <!-- GSAP and Draggable Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollToPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/Draggable.min.js"></script>
+</head>
+</head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>">
 <body>
   <main class="container">
     <section id="chasse" class="hero-section">
@@ -21,6 +25,18 @@
       </div>
       <div class="hero-content">
         <h1>THE<br>HUNT</h1>
+      </div>
+      <div class="container-menu">
+        <div class="dragMenu">
+          <img class="arrow-up" width="50" height="50" src="https://img.icons8.com/ios/50/FFFFFF/circled-chevron-right--v1.png" alt="circled-chevron-right--v1"/>
+          <div class="menu-content">
+            <h2>Partir en chasse</h2>
+            <p id="text-menu"> Vous décidez de partir chercher un calice qui étenchera votre soif et qui sait peut être
+              vous procurez une de ses nombreuses emotions oublié. Vous savez que chaque territoire a ses particularités et certain peut être
+              concidèrer comme hors limite, à vous de décidez vous vous prenez ce risque.</p>
+            <button>Commencer</button>
+          </div>
+        </div>
       </div>
     </section>
 

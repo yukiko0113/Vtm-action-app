@@ -102,6 +102,56 @@ h1 {
   white-space: nowrap; /* Empêche le texte de se casser en plusieurs lignes sur desktop */
 }
 
+/* Menu vertical d'escription */
+.container-menu {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 600px;
+  z-index: 1000;
+}
+
+.dragMenu {
+  position: relative;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  padding: 20px;
+  cursor: grab;
+  transition: transform 0.3s ease;
+  height: 50px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dragMenu:active {
+  cursor: grabbing;
+}
+
+.arrow-up {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  cursor: pointer;
+}
+
+.menu-content {
+  padding-top: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.dragMenu.dragging .menu-content {
+  opacity: 1;
+}
+
 /* Tooltip styles */
 .tooltip-content {
   position: absolute;

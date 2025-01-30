@@ -1,113 +1,49 @@
-function setupHorizontalScroll() {
-  const container = document.querySelector('.container');
-  if (!container) return;
+// script.js
+document.addEventListener('DOMContentLoaded', () => {
+  // Initialisation de GSAP et des plugins
+  gsap.registerPlugin(ScrollTrigger, Draggable);
 
-  // Configuration
-  const config = {
-    scrollSpeed: 0.5, // Vitesse du défilement
-    snapThreshold: 0.3, // Seuil pour le snap aux sections
-    friction: 0.1 // Frottement pour un arrêt naturel
-  };
+  // Configuration de base pour GSAP
+  gsap.defaults({
+    ease: "power2.out",
+    duration: 0.3
+  });
 
-  // État interne
-  let isScrolling = false;
-  let lastScrollPosition = 0;
-  let touchStartX = 0;
-
-  // Gestion du wheel event
-  container.addEventListener('wheel', handleWheel);
-  
-  // Gestion du touch pour les mobiles
-  container.addEventListener('touchstart', handleTouchStart);
-  container.addEventListener('touchmove', handleTouchMove);
-
-  // Gestion du scroll natif
-  container.addEventListener('scroll', handleScroll);
-
-  // Fonction principale de gestion du wheel
-  function handleWheel(e) {
-    e.preventDefault();
-    
-    // Calcul du delta horizontal
-    const deltaX = e.deltaX;
-    const scrollAmount = deltaX * config.scrollSpeed;
-
-    // Si déjà en train de scroll, on sort
-    if (isScrolling) return;
-
-    // Mise à jour de l'état
-    isScrolling = true;
-    
-    // Animation fluide avec GSAP
-    gsap.to(container, {
-      scrollTo: {
-        x: () => container.scrollLeft + scrollAmount,
-        y: 0
+  // Configuration pour le menu draggable
+  const menu = document.querySelector('.dragMenu');
+  if (menu) {
+    Draggable.create(menu, {
+      bounds: {
+        minX: 0,
+        maxX: container.scrollWidth - container.clientWidth,
+        minY: 0,
+        maxY: 0
       },
-      duration: config.snapThreshold,
-      ease: "power2.out",
-      onComplete: () => {
-        isScrolling = false;
-      }
-    });
-  }
-
-  // Gestion du touch pour les mobiles
-  function handleTouchStart(e) {
-    touchStartX = e.touches[0].clientX;
-    lastScrollPosition = container.scrollLeft;
-  }
-
-  function handleTouchMove(e) {
-    e.preventDefault();
-    const currentX = e.touches[0].clientX;
-    const scrollAmount = (lastScrollPosition - (currentX - touchStartX)) * config.scrollSpeed;
-
-    gsap.to(container, {
-      scrollTo: {
-        x: scrollAmount,
-        y: 0
-      },
-      duration: config.snapThreshold,
-      ease: "power2.out",
-      onComplete: () => {
-        lastScrollPosition = container.scrollLeft;
-      }
-    });
-  }
-
-  // Gestion du scroll natif
-  function handleScroll() {
-    // Logique pour le snap aux sections
-    const scrollPosition = container.scrollLeft;
-    const sections = document.querySelectorAll('section');
-    
-    if (sections.length === 0) return;
-
-    const sectionWidth = sections[0].offsetWidth;
-    const snapPosition = Math.round(scrollPosition / sectionWidth) * sectionWidth;
-
-    if (Math.abs(scrollPosition - snapPosition) > sectionWidth * config.snapThreshold) {
-      gsap.to(container, {
-        scrollTo: {
-          x: snapPosition,
-          y: 0
-        },
+      snap: {
+        points: Array.from({ length: 5 }, (_, i) => i * (window.innerWidth * 0.25)),
         duration: 0.3,
         ease: "power2.out"
-      });
-    }
+      },
+      onDragStart: () => {
+        document.body.style.cursor = 'grabbing';
+        event.preventDefault();
+      },
+      onDragEnd: () => {
+        document.body.style.cursor = 'grab';
+        gsap.to(menu, {
+          x: () => {
+            const menuRect = menu.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            return Math.round(menuRect.left / containerRect.width) * containerRect.width;
+          },
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      }
+    });
   }
 
-  // Initialisation
-  container.style.overflowX = 'scroll';
-  container.style.touchAction = 'none';
-}
-
-// Initialisation au chargement
-document.addEventListener('DOMContentLoaded', setupHorizontalScroll);
-
-  // Tooltip functionality
+  // Configuration pour les tooltips
   const tooltipTrigger = document.getElementById('tooltip-trigger');
   const tooltipContainer = document.querySelector('.tooltip-content');
 
@@ -160,3 +96,4 @@ document.addEventListener('DOMContentLoaded', setupHorizontalScroll);
       }
     });
   }
+});
