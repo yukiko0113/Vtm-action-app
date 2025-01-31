@@ -3,85 +3,127 @@ document.addEventListener('DOMContentLoaded', () => {
   gsap.registerPlugin(ScrollTrigger, Draggable);
 
 
-// Configuration de la modal
-const modal = document.querySelector('.modal');
-const isOpen = false;
-const threshold = 50; // Seuil en pixels pour l'ouverture/fermeture
-
 // Positionnement initial de la modal en bas de l'écran
+// Configuration de la modal
+// Sélection des éléments
+const modal = document.querySelector('.modal');
+const modalContent = document.querySelector('.modal-content');
+const backdrop = document.querySelector('.modal-backdrop');
+
+// Configuration GSAP
 gsap.set(modal, { 
-  y: window.innerHeight - modal.offsetHeight // Position initiale en bas
+  y: window.innerHeight - modal.offsetHeight,
+  cursor: 'grab',
+  pointerEvents: 'none'
 });
 
-// Création du draggable
-Draggable.create(modal, {
-  type: "y", // Autorise le glissement vertical
-  edgeResistance: 0.55, // Résistance au glissement aux bords
-  bounds: {
-    minY: -modal.offsetHeight + window.innerHeight, // Position maximale en haut
-    maxY: window.innerHeight - modal.offsetHeight // Position initiale en bas
-  },
-  inertia: true, // Active l'inertie pour un glissement naturel
-  onMove: function (e) {
-    // Calcul de la position actuelle
-    const currentY = this.y;
-    
-    // Si la modal n'est pas ouverte et que l'utilisateur la fait glisser vers le haut
-    if (!isOpen && currentY <= this.maxY - threshold) {
-      // Ouvre la modal
-      this.target.classList.add("open");
-      this.endDrag(); // Arrête le glissement
-      gsap.to(this.target, { 
-        y: this.minY, // Glisse jusqu'en haut
-        duration: 0.3
-      });
-      isOpen = true;
-    } 
-    // Si la modal est ouverte et que l'utilisateur la fait glisser vers le bas
-    else if (isOpen && currentY >= this.minY + threshold) {
-      // Ferme la modal
-      this.target.classList.remove("open");
-      this.endDrag(); // Arrête le glissement
-      gsap.to(this.target, { 
-        y: this.maxY, // Glisse jusqu'en bas
-        duration: 0.3
-      });
-      isOpen = false;
+// Gestion des événements
+document.addEventListener('DOMContentLoaded', () => {
+  // Configuration Draggable
+  Draggable.create(".modal", {
+    type: "y", // Seulement le déplacement vertical
+    edgeResistance: 1, // Résistance au bord
+    dragResistance: 0.89, // Résistance au glissement
+    bounds: { 
+      minY: 50, // Position minimale en bas
+      maxY: window.innerHeight - 100 // Position maximale en haut
+    },
+    inertia: true, // Active l'inertie
+    liveSnap: true, // Active le snap en temps réel
+    onDragStart: () => {
+      modal.style.cursor = 'grabbing';
+    },
+    onDragEnd: () => {
+      modal.style.cursor = 'grab';
     }
-  }
+  });
+
+  // Gestion des clics
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal || e.target === backdrop) {
+      closeModal();
+    }
+  });
+
+  // Gestion de la touche Échap
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+  });
 });
 
+// Ouvrir la modal
+function openModal() {
+  modal.classList.add('open');
+  backdrop.classList.add('active');
+}
+
+// Fermer la modal
+function closeModal() {
+  modal.classList.remove('open');
+  backdrop.classList.remove('active');
+}
   // Configuration pour les tooltips
   const tooltipTrigger = document.getElementById('tooltip-trigger');
   const tooltipContainer = document.querySelector('.tooltip-content');
 
   if (tooltipTrigger && tooltipContainer) {
     function loadTooltipContent() {
+      // Requête pour charger le contenu HTML de la tooltip
       fetch('Contenu-tooltips.html')
         .then(response => response.text())
         .then(data => {
+          // Injecter le contenu HTML dans le container de la tooltip
           tooltipContainer.innerHTML = data;
+          
+          // Récupérer l'élément vidéo dans la tooltip
           const tooltipVideo = document.getElementById('tooltip-video');
           
           if (tooltipVideo) {
+            // Réinitialiser la vidéo à 0
             tooltipVideo.currentTime = 0;
+            
+            // Démarrer la lecture
             tooltipVideo.play();
-
+    
+            // État pour gérer le premier passage
             let firstPlay = true;
-
+    
+            // Écouter l'événement de lecture pour gérer le loop
             tooltipVideo.addEventListener('timeupdate', function() {
+              // Si c'est le premier passage et que la vidéo est presque terminée
               if (firstPlay && tooltipVideo.currentTime >= tooltipVideo.duration - 1) {
                 firstPlay = false;
+                // Remettre à 10 secondes et activer le loop
                 tooltipVideo.currentTime = 10;
                 tooltipVideo.loop = true;
                 tooltipVideo.play();
               } else if (!firstPlay && tooltipVideo.currentTime >= tooltipVideo.duration - 1) {
+                // Si ce n'est pas le premier passage, remettre à 10 secondes
                 tooltipVideo.currentTime = 10;
               }
             });
+    
+            // Écouter l'événement de fin de lecture
+            tooltipVideo.addEventListener('ended', function() {
+              // Si le loop est activé, remettre à 10 secondes
+              if (tooltipVideo.loop) {
+                tooltipVideo.currentTime = 10;
+                tooltipVideo.play();
+              }
+            });
+    
+            // Écouter l'événement de pause pour éviter les bugs
+            tooltipVideo.addEventListener('pause', function() {
+              // Si la vidéo est arrêtée, remettre à 0
+              tooltipVideo.currentTime = 0;
+            });
           }
         })
-        .catch(error => console.error('Erreur lors du chargement du contenu des tooltips:', error));
+        .catch(error => {
+          console.error('Erreur lors du chargement du contenu des tooltips:', error);
+        });
     }
 
     tooltipTrigger.addEventListener('click', function(event) {
