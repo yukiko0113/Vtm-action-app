@@ -101,126 +101,33 @@ h1 {
   line-height: 0.8; /* Améliore l'espacement vertical */
   white-space: nowrap; /* Empêche le texte de se casser en plusieurs lignes sur desktop */
 }
-
-/* ==================== */
-/* STRUCTURE PRINCIPAIRE */
-/* ==================== */
-.menu-container {
-  position: fixed;
-  bottom: 0;
+ /* Menu déroulant */
+ .modal {
+  text-align: center;
+  width: 450px;
+  height: 300px;
+  border-radius: 18px;
+  padding: 4px 12px;
+  position: absolute;
+  bottom: -20lvh;
   left: 50%;
   transform: translateX(-50%);
-  width: 100%;
-  max-width: 600px;
-  height: 50vh; /* Taille de la moitié de la hauteur de la page */
-  z-index: 1000;
-  overflow: hidden;
-  cursor: grab;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-  backface-visibility: hidden;
-}
-
-.menu-container.dragging {
-  cursor: grabbing;
-  opacity: 0.8;
-}
-
-.menu-content-container {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  padding: 20px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  transition: transform 0.3s ease;
-}
-
-.menu-content {
-  padding-top: 20px;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-  max-height: 0;
+  backdrop-filter: blur(20px) saturate(180%);
+  z-index: 2;
   overflow: hidden;
 }
 
-.menu-container.dragging .menu-content {
-  opacity: 1;
-  visibility: visible;
-  max-height: 500px;
-  transition: all 0.3s ease;
-}
-
-/* Masque pour l'effet de glissement */
-.mask {
-  position: fixed;
-  bottom: 0;
+.modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.5) 0%,
-    transparent 100%
-  );
-  z-index: 999;
-  pointer-events: none;
-}
-/* ==================== */
-/* Styles des infobulles */
-/* ==================== */
-
-.tooltip-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: var(--dark-bg, #1a1a1a); /* Valeur par défaut si la variable n'est pas définie */
-  color: var(--text-color, #ffffff);
-  padding: 1rem;
-  border-radius: 0.5rem;
-  box-shadow: var(--button-shadow, 0 2px 5px rgba(0, 0, 0, 0.2));
-  display: none;
-  /* Ajout d'un délai pour un effet plus naturel */
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.tooltip-content.active {
-  display: block;
-  opacity: 1;
-}
-
-.tooltip-icon {
-  display: none;
-  /* Ajout de styles pour une meilleure intégration */
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  width: 20px;
-  height: 20px;
-  background: var(--icon-bg, #ffffff);
-  border-radius: 50%;
-  cursor: help;
-}
-
-/* ==================== */
-/* Accessibilité */
-/* ==================== */
-
-.tooltip-content[aria-hidden="true"] {
-  display: none;
-  opacity: 0;
-}
-
-.tooltip-content[aria-hidden="false"] {
-  display: block;
-  opacity: 1;
+  z-index: -1;
+  background: url('/image/UI/Menu-bg.webm') center/cover;
+  background-size: cover;
+  background-position: center;
 }
 
 /* Responsive styles */

@@ -1,46 +1,55 @@
-// script.js
 document.addEventListener('DOMContentLoaded', () => {
   // Initialisation de GSAP et des plugins
   gsap.registerPlugin(ScrollTrigger, Draggable);
 
-  // Configuration de base pour GSAP
-  gsap.defaults({
-    ease: "power2.out",
-    duration: 0.3
-  });
 
-  // Configuration pour le menu draggable
-  const menu = document.querySelector('.side-menu');
-  const container = document.querySelector('.menu-container');
+// Configuration de la modal
+const modal = document.querySelector('.modal');
+const isOpen = false;
+const threshold = 50; // Seuil en pixels pour l'ouverture/fermeture
 
-  if (menu) {
-    // Calcul de la position initiale en bas de l'écran
-    Draggable.create(menu, {
-      type: "y", // Glissement vertical
-      bounds: {
-        minY: 0, // Position initiale en bas
-        maxY: -menu.offsetHeight + window.innerHeight * 0.5 // Position maximale en haut
-      },
-      inertia: true,
-      inertia: true,
-      onDrag: () => {
-        const progress = (menu.offsetHeight - menu.getBoundingClientRect().bottom) / menu.offsetHeight;
-        gsap.to(menuContent, {
-          y: progress * menu.offsetHeight,
-          ease: "power2.out"
-        });
-      },
-      onDragEnd: () => {
-        // Si le menu est à plus de 50% de la hauteur, le fermer
-        if (menu.getBoundingClientRect().bottom > window.innerHeight * 0.5) {
-          gsap.to(menu, {
-            y: 0,
-            duration: 0.3
-          });
-        }
-      }
-    });
+// Positionnement initial de la modal en bas de l'écran
+gsap.set(modal, { 
+  y: window.innerHeight - modal.offsetHeight // Position initiale en bas
+});
+
+// Création du draggable
+Draggable.create(modal, {
+  type: "y", // Autorise le glissement vertical
+  edgeResistance: 0.55, // Résistance au glissement aux bords
+  bounds: {
+    minY: -modal.offsetHeight + window.innerHeight, // Position maximale en haut
+    maxY: window.innerHeight - modal.offsetHeight // Position initiale en bas
+  },
+  inertia: true, // Active l'inertie pour un glissement naturel
+  onMove: function (e) {
+    // Calcul de la position actuelle
+    const currentY = this.y;
+    
+    // Si la modal n'est pas ouverte et que l'utilisateur la fait glisser vers le haut
+    if (!isOpen && currentY <= this.maxY - threshold) {
+      // Ouvre la modal
+      this.target.classList.add("open");
+      this.endDrag(); // Arrête le glissement
+      gsap.to(this.target, { 
+        y: this.minY, // Glisse jusqu'en haut
+        duration: 0.3
+      });
+      isOpen = true;
+    } 
+    // Si la modal est ouverte et que l'utilisateur la fait glisser vers le bas
+    else if (isOpen && currentY >= this.minY + threshold) {
+      // Ferme la modal
+      this.target.classList.remove("open");
+      this.endDrag(); // Arrête le glissement
+      gsap.to(this.target, { 
+        y: this.maxY, // Glisse jusqu'en bas
+        duration: 0.3
+      });
+      isOpen = false;
+    }
   }
+});
 
   // Configuration pour les tooltips
   const tooltipTrigger = document.getElementById('tooltip-trigger');
