@@ -26,21 +26,16 @@
       <div class="hero-content">
         <h1>THE<br>HUNT</h1>
       </div>
-      <div class="modal-container">
-        <div class="modal">
-            <div class="modal-backdrop"></div>
-            <div class="modal-content">
-                <div class="drag-handle"></div>
-                <h3>Description</h3>
-                <p>Provides a surprisingly simple way to make virtually any DOM element draggable,
-                   spinnable, tossable, and even flick-scrollable using mouse and/or touch events,
-                    plus Draggable integrates beautifully (and optionally) with InertiaPlugin so 
-                    that the user can flick and have the motion decelerate smoothly based on momentum.</p>
-            </div>
-        </div>
-    </div>
+      <button class="button open-button">HUNT</button>
     </section>
-
+ <!-- Modal moved outside of the section -->
+ <dialog class="modal" id="modal">
+  <h2> Prépare sa chasse</h2>
+  <p> Partir a la recherche d'un nouveau calice, peut être trouver une perle rare,
+    dont le sang vous procura un sentiment oublié, de votre humanité passer.
+  </p>
+  <button class="button close-button">close modal</button>
+</dialog>
     <section id="coterie" class="hero-section">
       <div class="hero-image" aria-hidden="true">
         <video class="hero-image video" autoplay muted loop playsinline>
@@ -89,5 +84,6 @@
       </div>
     </section>
   </main>
+  <script src="script.js"></script>
 </body>
 </html>

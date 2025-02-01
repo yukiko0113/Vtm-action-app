@@ -2,68 +2,85 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialisation de GSAP et des plugins
   gsap.registerPlugin(ScrollTrigger, Draggable);
 
-
-// Positionnement initial de la modal en bas de l'écran
-// Configuration de la modal
-// Sélection des éléments
-const modal = document.querySelector('.modal');
-const modalContent = document.querySelector('.modal-content');
-const backdrop = document.querySelector('.modal-backdrop');
-
-// Configuration GSAP
-gsap.set(modal, { 
-  y: window.innerHeight - modal.offsetHeight,
-  cursor: 'grab',
-  pointerEvents: 'none'
-});
-
-// Gestion des événements
+// Configuration MODAL
 document.addEventListener('DOMContentLoaded', () => {
-  // Configuration Draggable
-  Draggable.create(".modal", {
-    type: "y", // Seulement le déplacement vertical
-    edgeResistance: 1, // Résistance au bord
-    dragResistance: 0.89, // Résistance au glissement
-    bounds: { 
-      minY: 50, // Position minimale en bas
-      maxY: window.innerHeight - 100 // Position maximale en haut
-    },
-    inertia: true, // Active l'inertie
-    liveSnap: true, // Active le snap en temps réel
-    onDragStart: () => {
-      modal.style.cursor = 'grabbing';
-    },
-    onDragEnd: () => {
-      modal.style.cursor = 'grab';
-    }
-  });
+  const modal = document.querySelector("#modal");
+  const btnOuvrir = document.querySelector(".open-button");
+  const btnFermer = document.querySelector(".close-button");
 
-  // Gestion des clics
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal || e.target === backdrop) {
-      closeModal();
-    }
-  });
+  console.log('Modal:', modal);
+  console.log(' Bouton ouvrir:', btnOuvrir);
+  console.log(' Bouton fermer:', btnFermer);
 
-  // Gestion de la touche Échap
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeModal();
-    }
+  function ouvrirModal() {
+      console.log('Fonction ouvrirModal appelée');
+      if (!modal) {
+          console.error('La modal n\'a pas été trouvée');
+          return;
+      }
+      
+      console.log('Avant l\'animation - Display:', modal.style.display);
+      modal.style.display = "block";
+      modal.style.opacity = "0";
+      modal.style.transform = "translateY(100%)";
+      
+      setTimeout(() => {
+          console.log('Après animation - Transform:', modal.style.transform);
+          modal.style.transform = "translateY(0)";
+          modal.style.opacity = "1";
+      }, 100);
+  }
+
+  function fermerModal() {
+      console.log('Fonction fermerModal appelée');
+      if (!modal) {
+          console.error('La modal n\'a pas été trouvée');
+          return;
+      }
+      
+      console.log('Avant fermeture - Display:', modal.style.display);
+      modal.style.transform = "translateY(100%)";
+      modal.style.opacity = "0";
+      
+      setTimeout(() => {
+          console.log('Après fermeture - Display:', modal.style.display);
+          modal.style.display = "none";
+      }, 300);
+  }
+
+  if (btnOuvrir) {
+      btnOuvrir.addEventListener("click", ouvrirModal);
+      console.log('Écouteur de clic ajouté au bouton ouvrir');
+  } else {
+      console.error('Bouton ouvrir non trouvé');
+  }
+
+  if (btnFermer) {
+      btnFermer.addEventListener("click", fermerModal);
+      console.log('Écouteur de clic ajouté au bouton fermer');
+  } else {
+      console.error('Bouton fermer non trouvé');
+  }
+
+  // Fermeture au clic hors modal
+  if (modal) {
+      modal.addEventListener("click", (e) => {
+          if (e.target === modal) {
+              console.log('Clic sur la modal - Fermeture');
+              fermerModal();
+          }
+      });
+  }
+
+  // Fermeture avec la touche Échap
+  document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+          console.log('Touche Échap pressée - Fermeture');
+          fermerModal();
+      }
   });
 });
 
-// Ouvrir la modal
-function openModal() {
-  modal.classList.add('open');
-  backdrop.classList.add('active');
-}
-
-// Fermer la modal
-function closeModal() {
-  modal.classList.remove('open');
-  backdrop.classList.remove('active');
-}
   // Configuration pour les tooltips
   const tooltipTrigger = document.getElementById('tooltip-trigger');
   const tooltipContainer = document.querySelector('.tooltip-content');
