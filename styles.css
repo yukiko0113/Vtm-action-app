@@ -58,9 +58,9 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden; /* Cache tout ce qui dépasse */
-  z-index: -1; /* Vidéo en arrière-plan */
-  background:rgba(25, 25, 25, 1)
+  overflow: hidden;
+  z-index: -1;
+  background: rgba(25, 25, 25, 1);
 }
 
 .hero-image video {
@@ -74,69 +74,37 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 100%; /* Couvre toute la largeur */
-  height: 80%; /* 80% de la hauteur */
-  background-size: cover; /* Assure que la vidéo couvre toute la zone */
-  z-index: -1; /* Vidéo en dessous du gradient et du titre */
+  width: 100%;
+  height: 80%;
+  background-size: cover;
+  z-index: -1;
 }
 
 .hero-content {
   position: relative;
-  z-index: 1; /* Contenu au-dessus du gradient et de la vidéo */
+  z-index: 1;
   text-align: left;
   width: 100%;
-  height: 100%; /* Prend toute la hauteur du conteneur */
-  padding: 20px 0; /* Ajoute un peu d'espace en haut et en bas */
+  height: 100%;
+  padding: 20px 0;
 }
 
 h1 {
-  font-size: clamp(15rem, 70vw, 6rem); /* Taille adaptative selon la largeur de l'écran */
+  font-size: clamp(15rem, 70vw, 6rem);
   color: var(--text-color);
-  position: absolute; /* Position fixe par rapport à l'écran */
-  top: 20px; /* Position en haut */
-  left: 20px; /* Position à gauche */
-  z-index: 1; /* Titre au-dessus du gradient et de la vidéo */
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1;
   margin: 0;
-  transform: none; /* Supprime tout décalage */
-  line-height: 0.8; /* Améliore l'espacement vertical */
-  white-space: nowrap; /* Empêche le texte de se casser en plusieurs lignes sur desktop */
+  transform: none;
+  line-height: 0.8;
+  white-space: nowrap;
 }
 
 /* ==================== */
-/* dialogue modal */
+/* MODAL */
 /* ==================== */
-/* Style du bouton d'ouverture */
-/* ==================== */
-/* dialogue modal */
-/* ==================== */
-
-/* Bouton d'ouverture */
-.open-button {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  width: 60px;
-  height: 60px;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  background-image: url('image/UI/arrow-up.svg');
-  display: inline-block;
-  transform: rotate(-40deg);
-  transform-origin: center;
-  transition: transform 0.3s ease;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.open-button:hover {
-  transform: scale(1.1);
-}
-
-/* Fond modale */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -147,99 +115,18 @@ h1 {
   z-index: 999;
 }
 
-/* Fond modale */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: none;
-  z-index: 999;
-}
-
-/* Contenu de la modal */
-/* ==================== */
-/* dialogue modal */
-/* ==================== */
-
-/* ==================== */
-/* dialogue modal */
-/* ==================== */
-
-/* Bouton d'ouverture */
-.open-button {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  width: 60px;
-  height: 60px;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  background: transparent;
-  display: inline-block;
-  transform-origin: center;
-}
-
-/* Fond modale */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: none;
-  z-index: 999;
-}
-
-/* Contenu de la modal */
-/* ==================== */
-/* dialogue modal */
-/* ==================== */
-
-/* Bouton d'ouverture */
-.open-button {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  width: 60px;
-  height: 60px;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  background: transparent;
-  display: inline-block;
-  transform-origin: center;
-}
-
-/* Fond modale */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: none;
-  z-index: 999;
-}
-
-/* Contenu de la modal */
 .modal {
   display: none;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  animation: slide-up 500ms forwards, fade-in 500ms forwards;
   padding: 2rem;
   border: none;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
-  max-width: 90%;
-  height: 80vh;
+  max-width: 40%;
+  height: 50vh;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
   z-index: 1000;
@@ -247,10 +134,32 @@ h1 {
   min-width: 300px;
   overflow-y: auto;
   min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .modal.active {
   opacity: 1;
+}
+
+.modal h2 {
+  font-size: 2rem;
+  margin: 0;
+  text-align: center;
+}
+
+.modal .content {
+  flex: 1;
+  padding: 0 1rem;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.modal p {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0;
 }
 
 .modal p,
@@ -263,109 +172,114 @@ h1 {
   color: white;
 }
 
-/* Masquer le bouton d'ouverture quand la modal est active */
-.hidden {
-  display: none;
-}
-
-/* Bouton de fermeture */
-.close-button {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
+/* ==================== */
+/* BOUTONS */
+/* ==================== */
+.victim-button {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: 268px;
+  height: 48px;
   border: none;
   cursor: pointer;
-  z-index: 1001;
-  width: 24px;
-  height: 24px;
-  background-image: url('image/UI/cross-small-svgrepo-com.svg');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  background: transparent;
   display: inline-block;
   transform-origin: center;
+  transition: transform 0.3s ease, background-image 0.3s ease;
+  background-image: url('image/UI/Buttom\ overOut.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
 }
 
-/* Responsive styles */
+.victim-button:hover {
+  background-image: url('image/UI/buttom\ overIn.png');
+  background-position: center 8px;
+}
+
+.victim-button::before,
+.victim-button * {
+  color: white;
+}
+
+/* ==================== */
+/* FONCTIONS */
+/* ==================== */
+@keyframes slide-up {
+  from {
+    transform: translate(-50%, 100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ==================== */
+/* RESPONSIVE */
+/* ==================== */
 @media (max-width: 700px) {
   .modal {
-    max-width: 95%;
-    height: 90vh;
     padding: 1rem;
+    gap: 1rem;
+    max-width: 80%;
+    height: 90vh;
   }
   
-  .modal p,
-  .modal h1,
-  .modal h2,
-  .modal h3,
-  .modal h4,
-  .modal h5,
-  .modal h6 {
-    font-size: 1rem;
-    line-height: 1.5;
+  .modal h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .modal .content {
+    padding: 0 0.5rem;
+    max-width: 90%;
+  }
+  
+  .modal p {
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+  
+  .victim-button {
+    width: 90%;
+    height: 40px;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 
-/* Bouton de fermeture */
-.close-button {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  z-index: 1001;
-  width: 24px;
-  height: 24px;
-  background-image: url('image/UI/cross-small-svgrepo-com.svg');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  transition: opacity 0.2s ease;
-  display: inline-block;
-  transform-origin: center;
-}
-
-.close-button:hover {
-  opacity: 0.7;
-}
-
-/* Ajout d'un peu de marge pour éviter que le contenu soit coupé */
-.modal-overlay {
-  margin: 0;
-  padding: 0;
-}
-
-
-/* Responsive styles */
-@media (max-width: 700px) {
-  h1 {
-    font-size: clamp(7rem, 30vw, 4rem); /* Taille adaptative réduite pour mobile */
-    top: 10px; /* Position en haut */
-    left: 10px; /* Position à gauche */
-    line-height: 0.8; /* Améliore l'espacement vertical */
-    white-space: normal; /* Permet le retour à la ligne */
-    width: 90%; /* Largeur réduite pour le retour à la ligne */
-    word-wrap: break-word; /* Permet le retour à la ligne si nécessaire */
-    overflow-wrap: break-word; /* Compatibilité avec d'autres navigateurs */
-  }
-}
-
-  .hero-image video {
-    width: 100%; /* Couvre la largeur entière */
-    height: 100%; /* Couvre la hauteur entière du conteneur */
-    object-fit: cover; /* Maintient les proportions tout en remplissant le conteneur */
+@media (max-width: 700px) and (orientation: portrait) {
+  .hero-image {
+    height: 80vh;
+    width: 100%;
   }
 
   #background-video {
-    width: 100%; /* Couvre toute la largeur */
-    height: 80%; /* 80% de la hauteur */
-    aspect-ratio: 16 / 9; /* Ratio d'aspect 16:9 */
-    object-fit: cover; /* Assure que la vidéo couvre toute la zone */
-    
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
+}
 
+/* ==================== */
+/* DIVERS */
+/* ==================== */
 button {
   width: 70px;
   height: 70px;
@@ -375,22 +289,29 @@ button {
   width: 30px;
   height: 30px;
 }
-@media (max-width: 700px) and (orientation: portrait) {
-  .hero-image {
-    height: 80vh; /* 80% de la hauteur de l'écran */
-    width: 100%; /* Largeur entière */
-  }
 
-  #background-video {
-    width: 100%; /* Couvre toute la largeur */
-    height: 100%; /* Prend toute la hauteur du conteneur parent */
-    object-fit: cover; /* Assure que la vidéo couvre toute la zone */
-    
-    background: red;
-  }
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+  width: 24px;
+  height: 24px;
+  background-image: url('image/UI/cross-small-svgrepo-com.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: inline-block;
+  transform-origin: center;
 }
 
-/* Masque dynamique adapté */
+.close-button:hover {
+  opacity: 0.7;
+}
+
 .hero-image::before {
   content: '';
   position: absolute;
@@ -406,10 +327,9 @@ button {
     var(--dark-bg) 100%
   );
   z-index: 1;
-  pointer-events: none; /* Permettre le swipe à travers le masque */
+  pointer-events: none;
 }
 
-/* Conteneur parent pour le swipe */
 .hero-container {
   width: 100vw;
   height: 100vh;
@@ -417,7 +337,6 @@ button {
   position: relative;
 }
 
-/* Horizontal scroll section */
 .container {
   height: 100vh;
   overflow-x: scroll;

@@ -12,50 +12,45 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log(' Bouton fermer:', btnFermer);
 
   function ouvrirModal() {
-      console.log('Fonction ouvrirModal appelée');
-      if (!modal) {
-          console.error('La modal n\'a pas été trouvée');
-          return;
-      }
-      
-      // Masquer le bouton d'ouverture
-      if (btnOuvrir) {
-        btnOuvrir.style.display = 'block'; // Assurez-vous que le bouton est visible
-        btnOuvrir.classList.remove('hidden'); // Supprimez toute classe de masquage
-      }
-    // Avant l'animation
-      console.log('Avant l\'animation - Display:', modal.style.display);
-      modal.style.display = "block";
-      modal.style.opacity = "0";
-      modal.style.transform = "translateY(100%)";
-      
-      setTimeout(() => {
-          console.log('Après animation - Transform:', modal.style.transform);
-          modal.style.transform = "translateY(0)";
-          modal.style.opacity = "1";
-      }, 100);
-  }
+    console.log('Fonction ouvrirModal appelée');
+    if (!modal) {
+      console.error('La modal n\'a pas été trouvée');
+      return;
+    }
+  
+    // Masquer le bouton d'ouverture
+    if (btnOuvrir) {
+      btnOuvrir.style.display = 'block';
+      btnOuvrir.classList.remove('hidden');
+    }
+  
+    // Initialiser l'animation
+    modal.style.display = "block";
+    modal.style.opacity = "0";
 
+    
+    setTimeout(() => {
+      modal.style.opacity = "1";
+    }, 100);
+  }
+  
   function fermerModal() {
-      console.log('Fonction fermerModal appelée');
-      if (!modal) {
-          console.error('La modal n\'a pas été trouvée');
-          return;
+    console.log('Fonction fermerModal appelée');
+    if (!modal) {
+      console.error('La modal n\'a pas été trouvée');
+      return;
+    }
+  
+    modal.style.opacity = "0";
+    
+    setTimeout(() => {
+      modal.style.display = "none";
+      
+      // Afficher à nouveau le bouton d'ouverture
+      if (btnOuvrir) {
+        btnOuvrir.classList.remove('hidden');
       }
-      
-      console.log('Avant fermeture - Display:', modal.style.display);
-      modal.style.transform = "translateY(100%)";
-      modal.style.opacity = "0";
-      
-      setTimeout(() => {
-          console.log('Après fermeture - Display:', modal.style.display);
-          modal.style.display = "none";
-          
-          // Afficher à nouveau le bouton d'ouverture
-          if (btnOuvrir) {
-              btnOuvrir.classList.remove('hidden');
-          }
-      }, 300);
+    }, 300);
   }
 
   if (btnOuvrir) {
